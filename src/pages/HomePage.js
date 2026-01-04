@@ -112,12 +112,9 @@ export const HomePage = ({
 
   const nextStep = () => {
     if (validateStep()) {
-      if (currentStep === 2) {
-        const rejected = Math.random() < 0.2;
-        if (rejected) {
-          setOdmRejected(true);
-          return;
-        }
+      if (currentStep === 8) {
+        handleSubmit();
+        return;
       }
       if (currentStep < steps.length - 1) {
         setCurrentStep(currentStep + 1);
@@ -582,7 +579,7 @@ export const HomePage = ({
           </div>
         )}
 
-        {currentStep === 8 && (
+        {currentStep === 6 && (
           <div>
             <h3 className="text-2xl font-bold mb-6">Video Qeydiyyat</h3>
             <div className="max-w-2xl mx-auto">
@@ -649,7 +646,7 @@ export const HomePage = ({
           </div>
         )}
 
-        {currentStep === 6 && (
+       {currentStep === 7 && (
           <div>
             <h3 className="text-2xl font-bold mb-6">Kredit Müqaviləsi</h3>
             <div className="bg-white border-2 border-gray-300 rounded-xl p-8 mb-6 max-h-96 overflow-y-auto">
@@ -710,7 +707,7 @@ export const HomePage = ({
           </div>
         )}
 
-        {currentStep === 7 && (
+        {currentStep === 8 && (
           <div>
             <h3 className="text-2xl font-bold mb-6">Yekun Təsdiq</h3>
             <div className="max-w-md mx-auto">
@@ -745,9 +742,8 @@ export const HomePage = ({
             </div>
           </div>
         )}
-
         <div className="flex justify-between mt-8 pt-6 border-t">
-          {currentStep > 0 && !odmRejected && (
+          {currentStep > 0 && currentStep !== 3 && currentStep !== 8 && !odmRejected && (
             <button
               onClick={prevStep}
               className="flex items-center space-x-2 px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition"
@@ -757,7 +753,7 @@ export const HomePage = ({
             </button>
           )}
           
-          {currentStep < 8 && currentStep !== 3 && !odmRejected && (
+          {currentStep >= 0 && currentStep <= 7 && currentStep !== 3 && !odmRejected && (
             <button
               onClick={nextStep}
               className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition ml-auto"
@@ -770,7 +766,7 @@ export const HomePage = ({
           {currentStep === 8 && (
             <button
               onClick={handleSubmit}
-              className="flex items-center space-x-2 px-8 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition ml-auto"
+              className="flex items-center justify-center space-x-2 px-8 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition w-96 m-auto"
             >
               <CheckCircle size={20} />
               <span>Təsdiq et</span>
