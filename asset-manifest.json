@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/Kredo/static/css/main.acfa5a34.css",
-    "main.js": "/Kredo/static/js/main.26b0bac6.js",
+    "main.css": "/Kredo/static/css/main.9701d5a6.css",
+    "main.js": "/Kredo/static/js/main.3584caf9.js",
     "static/js/453.c2ebe288.chunk.js": "/Kredo/static/js/453.c2ebe288.chunk.js",
     "index.html": "/Kredo/index.html",
-    "main.acfa5a34.css.map": "/Kredo/static/css/main.acfa5a34.css.map",
-    "main.26b0bac6.js.map": "/Kredo/static/js/main.26b0bac6.js.map",
+    "main.9701d5a6.css.map": "/Kredo/static/css/main.9701d5a6.css.map",
+    "main.3584caf9.js.map": "/Kredo/static/js/main.3584caf9.js.map",
     "453.c2ebe288.chunk.js.map": "/Kredo/static/js/453.c2ebe288.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.acfa5a34.css",
-    "static/js/main.26b0bac6.js"
+    "static/css/main.9701d5a6.css",
+    "static/js/main.3584caf9.js"
   ]
 }
