@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Kredo/static/css/main.1df18c0e.css",
+    "main.js": "/Kredo/static/js/main.5272ae8e.js",
+    "static/js/453.c2ebe288.chunk.js": "/Kredo/static/js/453.c2ebe288.chunk.js",
+    "index.html": "/Kredo/index.html",
+    "main.1df18c0e.css.map": "/Kredo/static/css/main.1df18c0e.css.map",
+    "main.5272ae8e.js.map": "/Kredo/static/js/main.5272ae8e.js.map",
+    "453.c2ebe288.chunk.js.map": "/Kredo/static/js/453.c2ebe288.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1df18c0e.css",
+    "static/js/main.5272ae8e.js"
+  ]
+}
